@@ -63,3 +63,13 @@ Trainees must implement:
 - SELECT queries (including joins if needed)
 - DB file: SQLITE_PATH (default: ./training.db)
 
+---
+
+## 5) Exercises
+
+Run Example:
+```bash
+python -m src.exercises.exercise_00_onboarding
+```
+
+
