@@ -39,4 +39,12 @@ class ShopifyGraphQLClient:
         - If response contains top-level "errors", raise with details
         - Return parsed JSON
         """
+        graph_query = {"query": query, "variables": variables}
+        result = requests.post(
+            url=self.endpoint,
+            headers= self._headers(),
+            data=query,
+            timeout=30
+        )
+        return result.json()
         raise NotImplementedError

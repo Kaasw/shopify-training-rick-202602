@@ -24,7 +24,8 @@ from src.storage import repo
 def main() -> None:
     settings = load_settings()
     client = ShopifyGraphQLClient(settings)
-    catalog = CatalogService(client)
+    # catalog = CatalogService(client)
+
 
     # Step 1: Create two test products (Manual)
     # Step 2: Query products
@@ -32,14 +33,15 @@ def main() -> None:
     # - Implement catalog.query_products(...)
     # - Extract the product fields into a list of dict rows
     # - Print a short summary
-    raise NotImplementedError
+    print("test")
 
     # Step 3: Save queried products to SQLite
     # TODO:
     # - repo.create_tables()
     # - repo.insert_products(rows)
     # - verify with repo.list_products()
-    raise NotImplementedError
+    print(client.execute(query="Hi"))
+    # raise NotImplementedError
 
 
 if __name__ == "__main__":
