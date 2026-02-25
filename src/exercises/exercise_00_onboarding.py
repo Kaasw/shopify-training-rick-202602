@@ -32,14 +32,14 @@ def main() -> None:
     # - Extract the product fields into a list of dict rows
     # - Print a short summary
 
-    print(catalog.delete_collection("gid://shopify/Collection/343187095596"))
 
     # Step 3: Save queried products to SQLite
     # TODO:
     # - repo.create_tables()
     # - repo.insert_products(rows)
     # - verify with repo.list_products()
-    # raise NotImplementedError
+    repo.conn
+    raise NotImplementedError
 
 
 if __name__ == "__main__":
