@@ -144,13 +144,68 @@ class CatalogService:
         TODO:
         - Implement collection creation for your API version.
         """
+
+        query = """
+    mutation ($input: CollectionInput!) {
+        collectionCreate(input: $input) {
+                collection {
+                id
+                title
+            }
+            userErrors {
+                field
+                message
+            }
+        }
+    }
+"""
+        variables = {
+            "input": {
+                "title": title
+            }
+        }
+
+        return self.client.execute(query, variables)
         raise NotImplementedError
 
-    def create_smart_collection(self, title: str) -> Dict[str, Any]:
+    def create_smart_collection(self, title: str, ruleSet: dict) -> Dict[str, Any]:
         """
         TODO:
         - Implement smart collection creation (if supported by your API version).
         """
+        query = """
+        mutation ($input: CollectionInput!) {
+            collectionCreate(input: $input) {
+                    collection {
+                    id
+                    title
+                }
+                userErrors {
+                    field
+                    message
+                }
+                collection {
+                    id
+                    title
+                    ruleSet {
+                        rules {
+                            column
+                            condition
+                            relation
+                        }
+                    }
+                }
+            }
+        }
+        """
+        variables = {
+            "input": {
+                "title": title,
+                "ruleSet": ruleSet
+            }
+        }
+        
+        return self.client.execute(query, variables)
         raise NotImplementedError
 
     def delete_collection(self, collection_gid: str) -> Dict[str, Any]:
