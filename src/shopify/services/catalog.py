@@ -117,8 +117,8 @@ class CatalogService:
         """
 
         query = """
-        mutation ($input: ProductDeleteInput!) {
-            productDelete(input: $input) {
+        mutation ($id: ID!) {
+            productDelete(input: { id: $id } ) {
             deletedProductId
             userErrors {
                 field
@@ -128,9 +128,7 @@ class CatalogService:
         }
     """
         variables = {
-            "input": {
                 "id": product_gid
-            }
         }
 
         return self.client.execute(query=query, variables=variables)
@@ -213,6 +211,24 @@ class CatalogService:
         TODO:
         - Implement collection deletion for your API version.
         """
+        
+        query = """
+        mutation ($id: ID!) {
+            collectionDelete(input: { id: $id } ) {
+            deletedCollectionId
+            userErrors {
+                field
+                message
+                }
+            }
+        }
+    """
+        variables = {
+                "id": collection_gid
+        }
+
+        return self.client.execute(query=query, variables=variables)
+        
         raise NotImplementedError
 
 

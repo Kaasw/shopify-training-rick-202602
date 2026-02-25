@@ -31,15 +31,8 @@ def main() -> None:
     # - Implement catalog.query_products(...)
     # - Extract the product fields into a list of dict rows
     # - Print a short summary
-    ruleSet = {
-      "appliedDisjunctively": True,
-      "rules": {
-        "column": "TITLE",
-        "relation": "CONTAINS",
-        "condition": "Toilet"
-      }
-    }
-    print(catalog.create_smart_collection(title="Toilet Collection", ruleSet=ruleSet))
+
+    print(catalog.delete_collection("gid://shopify/Collection/343187095596"))
 
     # Step 3: Save queried products to SQLite
     # TODO:
