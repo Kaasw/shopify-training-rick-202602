@@ -89,7 +89,24 @@ class CatalogService:
         - Implement products query (by first, optional search query).
         - Return response JSON.
         """
-        return self.client.execute(query= f"{{ products(first: {first}) {{ edges {{ node {{ title }} }} }} }}")
+
+        filter_query = """
+        query ($input: ProductConnection!) {
+            products(first: $input, query: $input) {
+                node {
+                    id
+                    title
+                }
+            }
+        }
+
+    """
+        variables = {
+            "first": first,
+            "query": query
+        }
+        
+        return self.client.execute(query=filter_query, variables=variables)
         raise NotImplementedError
 
     def delete_product(self, product_gid: str) -> Dict[str, Any]:
