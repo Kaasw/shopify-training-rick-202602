@@ -31,7 +31,7 @@ def main() -> None:
     # - Implement catalog.query_products(...)
     # - Extract the product fields into a list of dict rows
     # - Print a short summary
-    print(catalog.query_products())
+    print(catalog.delete_product("gid://shopify/Product/8197640519724"))
 
     # Step 3: Save queried products to SQLite
     # TODO:

@@ -91,21 +91,22 @@ class CatalogService:
         """
 
         filter_query = """
-        query ($input: ProductConnection!) {
-            products(first: $input, query: $input) {
-                node {
-                    id
-                    title
+        query ($first: Int!, $query: String) {
+            products(first: $first, query: $query) {
+                edges {
+                    node {
+                        id
+                        title
+                    }
                 }
             }
         }
-
     """
         variables = {
             "first": first,
-            "query": query
-        }
-        
+            "query": query if query else None
+    }
+
         return self.client.execute(query=filter_query, variables=variables)
         raise NotImplementedError
 
@@ -114,6 +115,25 @@ class CatalogService:
         TODO:
         - Implement productDelete mutation.
         """
+
+        query = """
+        mutation ($input: ProductDeleteInput!) {
+            productDelete(input: $input) {
+            deletedProductId
+            userErrors {
+                field
+                message
+                }
+            }
+        }
+    """
+        variables = {
+            "input": {
+                "id": product_gid
+            }
+        }
+
+        return self.client.execute(query=query, variables=variables)
         raise NotImplementedError
 
     # ----------------------
