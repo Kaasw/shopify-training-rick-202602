@@ -1,6 +1,5 @@
 from __future__ import annotations
-from typing import Any, Dict, Optional
-from string import Template
+from typing import Any, Dict, Optional, List
 
 from src.shopify.client import ShopifyGraphQLClient
 
@@ -45,7 +44,7 @@ class CatalogService:
         return self.client.execute(query=query, variables=variables)
         raise NotImplementedError
 
-    def create_product_with_variants(self, title: str) -> Dict[str, Any]:
+    def create_product_with_variants(self, title: str, productOptions: List[dict]) -> Dict[str, Any]:
         """
         TODO:
         - Implement productCreate for a product with options (Size, Color) and variants.
@@ -56,6 +55,16 @@ class CatalogService:
             product {
                 id
                 title
+                options {
+                    id
+                    name
+                    position
+                    optionValues {
+                        id
+                        name
+                        hasVariants
+                        }
+                    }
                 }
             userErrors {
             field
@@ -66,7 +75,8 @@ class CatalogService:
     """     
         variables = {
         "input": {
-            "title": title
+            "title": title,
+            "productOptions": productOptions
         }
     }
         return self.client.execute(query=query, variables=variables)

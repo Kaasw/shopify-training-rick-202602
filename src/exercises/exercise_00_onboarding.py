@@ -31,7 +31,8 @@ def main() -> None:
     # - Implement catalog.query_products(...)
     # - Extract the product fields into a list of dict rows
     # - Print a short summary
-    print(catalog.create_simple_product(title="Cooler toilet"))
+    product = [{"name": "Color", "values": [{"name": "Red"}, {"name": "Blue"}]}, {"name": "Size", "values": [{"name": "Small"}, {"name": "Large"}]}]
+    print(catalog.create_product_with_variants(title="Cooler toilet", productOptions=product))
 
     # Step 3: Save queried products to SQLite
     # TODO:
