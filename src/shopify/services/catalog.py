@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Any, Dict, Optional
+from string import Template
 
 from src.shopify.client import ShopifyGraphQLClient
 
@@ -22,6 +23,26 @@ class CatalogService:
         - Implement productCreate for a product without options.
         - Return response JSON.
         """
+        
+        query = """
+        mutation ($input: ProductCreateInput!) {productCreate (product: $input) {
+            product {
+                id
+                title
+                }
+            userErrors {
+            field
+            message
+            }
+        }
+    }
+    """     
+        variables = {
+        "input": {
+            "title": title
+        }
+    }
+        return self.client.execute(query=query, variables=variables)
         raise NotImplementedError
 
     def create_product_with_variants(self, title: str) -> Dict[str, Any]:
@@ -30,6 +51,26 @@ class CatalogService:
         - Implement productCreate for a product with options (Size, Color) and variants.
         - Return response JSON.
         """
+        query = """
+        mutation ($input: ProductCreateInput!) {productCreate (product: $input) {
+            product {
+                id
+                title
+                }
+            userErrors {
+            field
+            message
+            }
+        }
+    }
+    """     
+        variables = {
+        "input": {
+            "title": title
+        }
+    }
+        return self.client.execute(query=query, variables=variables)
+
         raise NotImplementedError
 
     def query_products(self, first: int = 10, query: Optional[str] = None) -> Dict[str, Any]:
@@ -38,6 +79,7 @@ class CatalogService:
         - Implement products query (by first, optional search query).
         - Return response JSON.
         """
+        return self.client.execute(query= f"{{ products(first: {first}) {{ edges {{ node {{ title }} }} }} }}")
         raise NotImplementedError
 
     def delete_product(self, product_gid: str) -> Dict[str, Any]:
@@ -70,3 +112,5 @@ class CatalogService:
         - Implement collection deletion for your API version.
         """
         raise NotImplementedError
+
+
