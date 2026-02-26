@@ -96,6 +96,19 @@ def list_entities(entity_type: str | None = None) -> list[dict[str, Any]]:
     return [dict(x) for x in query_all(query)]
     raise NotImplementedError
 
+def list_products(limit: int = 5) -> list[dict[str, Any]]:
+    """
+    TODO:
+    Select entities from training_entities using raw SQL.
+    """
+    
+    query = f"""
+        SELECT * FROM training_products LIMIT '{limit}'
+    """
+    
+    return [dict(x) for x in query_all(query)]
+    raise NotImplementedError
+
 
 def delete_entity_record(shopify_gid: str) -> None:
     """
