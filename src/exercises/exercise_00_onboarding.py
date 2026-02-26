@@ -25,21 +25,24 @@ def main() -> None:
     settings = load_settings()
     client = ShopifyGraphQLClient(settings)
     catalog = CatalogService(client)
-
     # Step 1: Create two test products (Manual)
     # Step 2: Query products
     # TODO:
     # - Implement catalog.query_products(...)
     # - Extract the product fields into a list of dict rows
     # - Print a short summary
-    raise NotImplementedError
+    products = catalog.query_products(first = 2)
 
     # Step 3: Save queried products to SQLite
     # TODO:
     # - repo.create_tables()
-    # - repo.insert_products(rows)
+    
+    for k, v in products.items():
+        repo.upsert_product(product_gid=k, title=v['title'], handle=v['handle'], status=v['status'])
+    
     # - verify with repo.list_products()
-    raise NotImplementedError
+    print(repo.list_products())
+    # raise NotImplementedError
 
 
 if __name__ == "__main__":

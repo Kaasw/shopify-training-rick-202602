@@ -27,24 +27,35 @@ def execute(sql: str, params: Optional[Sequence[Any]] = None) -> None:
     - CREATE TABLE
     - INSERT / UPDATE / DELETE
     """
-    with connect() as conn:
-        conn.execute(sql, params or [])
-        conn.commit()
+    try:    
+        with connect() as conn:
+            conn.execute(sql, params or [])
+            conn.commit()
+    except sqlite3.OperationalError as e:
+            print ("Failed", e)
 
 
 def execute_many(sql: str, params_list: Iterable[Sequence[Any]]) -> None:
     """
     Execute a SQL statement against multiple parameter sets.
     """
-    with connect() as conn:
-        conn.executemany(sql, params_list)
-        conn.commit()
-
-
+    
+    try:    
+        with connect() as conn:
+            conn.executemany(sql, params_list)
+            conn.commit()
+    except sqlite3.OperationalError as e:
+            print ("Failed", e)
+            
 def query_all(sql: str, params: Optional[Sequence[Any]] = None) -> list[sqlite3.Row]:
     """
     Execute a SELECT query and return all rows.
     """
-    with connect() as conn:
-        cur = conn.execute(sql, params or [])
-        return cur.fetchall()
+    try:    
+        with connect() as conn:
+            cur = conn.execute(sql, params or [])
+            return cur.fetchall()
+    except sqlite3.OperationalError as e:
+            print ("Failed", e)
+
+
