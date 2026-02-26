@@ -31,15 +31,18 @@ def main() -> None:
     # - Implement catalog.query_products(...)
     # - Extract the product fields into a list of dict rows
     # - Print a short summary
-
+    products = catalog.query_products(first = 2)
 
     # Step 3: Save queried products to SQLite
     # TODO:
     # - repo.create_tables()
-    # - repo.insert_products(rows)
+    
+    for k, v in products.items():
+        repo.upsert_product(product_gid=k, title=v['title'], handle=v['handle'], status=v['status'])
+    
     # - verify with repo.list_products()
-    repo.conn
-    raise NotImplementedError
+    print(repo.list_products())
+    # raise NotImplementedError
 
 
 if __name__ == "__main__":
