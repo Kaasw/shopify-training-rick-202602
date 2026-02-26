@@ -246,4 +246,32 @@ class CatalogService:
         
         raise NotImplementedError
 
-
+    def add_products_to_collection(self, product_gid: List[str], collection_gid: str) -> Dict[str, Any]:
+        query = """
+            mutation ($id: ID!, $productIds: [ID!]!) 
+                {
+                    collectionAddProducts(id: $id, productIds: $productIds) {
+                        collection {
+                            id
+                            title
+                            products(first: 5) {
+                                nodes {
+                                    id
+                                    title
+                                }
+                            }
+                        }
+                        userErrors {
+                            field
+                            message
+                        }
+                    }
+                }
+        """
+        
+        variables = {
+            "id": collection_gid,
+            "productIds": product_gid
+        }
+        
+        return self.client.execute(query=query, variables=variables)
