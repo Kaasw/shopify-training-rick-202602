@@ -17,6 +17,7 @@ def create_tables() -> None:
        - title TEXT
        - handle TEXT
        - status TEXT
+       
 
     2) training_variants
        - variant_gid TEXT PRIMARY KEY
@@ -75,6 +76,12 @@ def create_tables() -> None:
 
         """CREATE TABLE IF NOT EXISTS training_orders (
             order_gid TEXT PRIMARY KEY
+        )
+        """,
+        
+        """CREATE TABLE IF NOT EXISTS training_locations (
+            location_gid TEXT PRIMARY KEY,
+            name TEXT
         )
         """
     ]
@@ -244,4 +251,11 @@ def insert_order(order_gid: str) -> None:
         INSERT INTO training_orders VALUES ('{order_gid}')
     """
     
+    return execute(query)
+
+def upsert_location(location_gid: str, name: str) -> None:
+    query = f"""
+        INSERT INTO training_locations(location_gid, name) VALUES ('{location_gid}', '{name}')
+            ON CONFLICT(location_gid) DO UPDATE SET 'name' = excluded.name;
+   """
     return execute(query)
