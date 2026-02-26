@@ -198,8 +198,11 @@ def list_products_with_variants() -> list[dict[str, Any]]:
     """
     
     query = """
-
+        select training_products.product_gid, 
+        training_products.title, variant_gid, 
+        inventory_item_gid from training_products 
+        inner join training_variants on training_products.product_gid = training_variants.product_gid
     """
+    return [dict(x) for x in query_all(query)]
     raise NotImplementedError
-
 
