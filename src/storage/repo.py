@@ -36,12 +36,18 @@ def create_tables() -> None:
        - note TEXT
     """
     
-    query = [""" 
-        CREATE TABLE IF NOT EXISTS training_products (
+    query = [
+        """CREATE TABLE IF NOT EXISTS training_collections (
+        collection_gid TEXT PRIMARY KEY,
+        title TEXT
+        );
+    """,
+        """CREATE TABLE IF NOT EXISTS training_products (
             product_gid TEXT PRIMARY KEY,
             title TEXT,
             handle TEXT,
-            status TEXT
+            collection_gid TEXT, 
+            FOREIGN KEY (collection_gid) REFERENCES training_collections(collection_gid)
         );
         """, 
         
@@ -51,7 +57,8 @@ def create_tables() -> None:
         title TEXT,
         sku TEXT,
         price TEXT,
-        inventory_item_gid TEXT
+        inventory_item_gid TEXT,
+        FOREIGN KEY (product_gid) REFERENCES training_products(product_gid)
         );""",
         
         """CREATE TABLE IF NOT EXISTS training_locations (
@@ -64,7 +71,8 @@ def create_tables() -> None:
         shopify_gid TEXT PRIMARY KEY,
         note TEXT
         );
-    """]
+    """
+    ]
     for statement in query:
         execute(statement)
     # raise NotImplementedError
@@ -218,4 +226,11 @@ def list_products_with_variants() -> list[dict[str, Any]]:
     """
     return [dict(x) for x in query_all(query)]
     raise NotImplementedError
+
+def upsert_collection(collection_gid: str, title: str) -> None:
+    query = f"""
+        INSERT INTO training_collections(collection_gid, title) VALUES ('{collection_gid}', '{title}')
+            ON CONFLICT(collection_gid) DO UPDATE SET 'title' = excluded.title;
+   """
+    return execute(query)
 
