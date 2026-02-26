@@ -71,7 +71,12 @@ def create_tables() -> None:
         shopify_gid TEXT PRIMARY KEY,
         note TEXT
         );
-    """
+    """,
+
+        """CREATE TABLE IF NOT EXISTS training_orders (
+            order_gid TEXT PRIMARY KEY
+        )
+        """
     ]
     for statement in query:
         execute(statement)
@@ -234,3 +239,9 @@ def upsert_collection(collection_gid: str, title: str) -> None:
    """
     return execute(query)
 
+def insert_order(order_gid: str) -> None:
+    query = f"""
+        INSERT INTO training_orders VALUES ('{order_gid}')
+    """
+    
+    return execute(query)
