@@ -97,6 +97,8 @@ class CatalogService:
                     node {
                         id
                         title
+                        handle
+                        status
                     }
                 }
             }
@@ -106,8 +108,21 @@ class CatalogService:
             "first": first,
             "query": query if query else None
     }
+        data = self.client.execute(query=filter_query, variables=variables)
+        
+        edges = data.get('products').get('edges')
+        if not edges:
+            return "No products found"
 
-        return self.client.execute(query=filter_query, variables=variables)
+        product_dict = {
+            x['node']['id']: 
+            {
+            "title": x['node']['title'],
+            "handle": x['node']['handle'],
+            "status": x['node']['status']
+            } for x in edges
+        }
+        return product_dict
         raise NotImplementedError
 
     def delete_product(self, product_gid: str) -> Dict[str, Any]:
