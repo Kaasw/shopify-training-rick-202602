@@ -789,3 +789,55 @@ class CatalogService:
         }
         
         return self.client.execute(filter_query, variables)
+    
+    # ----------------------
+    # MetaObjects
+    # ----------------------
+    def create_gift_card(self, customer_gid: str, initialValue: float, **kwargs) -> Dict[str, Any]:
+        query = """
+            mutation GiftCardCreate($input: GiftCardCreateInput!) {
+                giftCardCreate(input: $input) {
+                    giftCard {
+                    id
+                    balance {
+                        amount
+                        currencyCode
+                    }
+                    }
+                    userErrors {
+                    field
+                    message
+                    }
+                }
+                }
+        """
+        
+        variables = {
+            "input": {
+                "customerId": customer_gid,
+                "initialValue": initialValue,
+                **kwargs
+            }
+        }
+        
+        return self.client.execute(query, variables)
+    
+    def query_gift_card(self,first: int = 10,query: Optional[str] = None) -> Dict[str, Any]:
+        query_filter = """
+            query($first: Int!, $query: String) {
+                giftCards(first: $first, query: $query) {
+                        nodes {
+                            id
+                            enabled
+
+                    }
+                }
+                }
+        """
+        
+        variables = {
+            "first": first,
+            "query": query if query else None
+        }
+        
+        return self.client.execute(query_filter, variables)
