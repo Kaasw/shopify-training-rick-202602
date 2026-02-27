@@ -38,7 +38,8 @@ def main() -> None:
    # - Call catalog.list_locations()
    # - Pick one location_gid
    # - repo.upsert_location(location_gid, name)
-   #  repo.upsert_location("gid://shopify/Location/80988799020"," My Custom Location")
+   
+   repo.upsert_location("gid://shopify/Location/80988799020"," My Custom Location")
 
 
    # Step 2: Create products with required inventory conditions
@@ -56,27 +57,15 @@ def main() -> None:
    # - Register created entities for cleanup:
    #   - repo.register_entity("product", product_gid, note=...)
    #   - repo.register_entity("collection", collection_gid, ...) when created
-   #  print(catalog.create_simple_product("Quantity test"))
+   print(catalog.create_simple_product("Quantity test"))
    
    update_data = {
       "cost": 63,
       "tracked": True
    }
-   
    catalog.update_inventory_item("gid://shopify/InventoryItem/47426620063788", update_data)
    print(catalog.activate_inventory("gid://shopify/InventoryItem/47426620063788", "gid://shopify/Location/80988799020", 10))
    
- 
-   print(catalog.set_inventory_item_quantity(inventory_item_gid="gid://shopify/InventoryItem/47426620063788", 
-                                                location_gid="gid://shopify/Location/80988799020",
-                                                reason=InventoryAdjustmentReason.DAMAGED,
-                                                name=Name.AVAILABLE,
-                                                referenceDocumentUri="logistics://some.warehouse/take/2023-01/13",
-                                                quantity=365))
-    
-   return None
-   raise NotImplementedError
-
    # Step 3: Update both products
    # - Set quantity to 200 for both products
    #   For the simple product:
@@ -91,20 +80,30 @@ def main() -> None:
    # - Call:
    #   - catalog.set_inventory_tracked(inventory_item_gid, True) when needed
    #   - catalog.set_on_hand_quantity(inventory_item_gid, location_gid, 200)
-   raise NotImplementedError
+   
+      
+   print(catalog.set_inventory_item_quantity(inventory_item_gid="gid://shopify/InventoryItem/47426620063788", 
+                                                location_gid="gid://shopify/Location/80988799020",
+                                                reason=InventoryAdjustmentReason.DAMAGED,
+                                                name=Name.AVAILABLE,
+                                                referenceDocumentUri="logistics://some.warehouse/take/2023-01/13",
+                                                quantity=365))
+    
 
    # Step 4: Update tags and titles for both products
    # TODO:
    # - catalog.update_product_tags(product_gid, tags=[...])
    # - catalog.update_product_title(product_gid, new_title=...)
-   raise NotImplementedError
+   
+   print(catalog.update_product("gid://shopify/Product/8200201830444", tags = ["Sport", "Winter"], title = "Ex 3 test"))
 
+   # Done in ex 1
    # Step 5: Create a new collection and add the two products to it
    # TODO:
    # - collection = catalog.create_custom_collection(...)
    # - catalog.add_products_to_collection(collection_gid, [product_gid_1, product_gid_2])
    # - repo.register_entity("collection", collection_gid, note="created in exercise_03")
-   raise NotImplementedError
+
 
 
 if __name__ == "__main__":
