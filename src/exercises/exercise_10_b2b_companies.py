@@ -10,12 +10,15 @@ Goal:
 
 from src.app.config import load_settings
 from src.shopify.client import ShopifyGraphQLClient
+from src.shopify.services.catalog import CatalogService
 from src.storage import repo
 
 
 def main() -> None:
     settings = load_settings()
-    _client = ShopifyGraphQLClient(settings)
+    client = ShopifyGraphQLClient(settings)
+    catalog = CatalogService(client)
+
 
     # TODO:
     # - Implement companyCreate mutation (if available)
@@ -23,7 +26,21 @@ def main() -> None:
     # - Implement companyContactCreate or equivalent
     # - Query companies
     # - Save IDs to SQLite registry
-    raise NotImplementedError
+    
+    # print(catalog.create_company("Skibini"))
+    location_data = {
+        "locale": "vi",
+        "name": "Toilet World"
+    }
+    # print(catalog.create_company_location("gid://shopify/Company/3882058038", location_data))
+    contact_data = {
+    "email": "avery.brown@example.com",
+    "firstName": "Avery",
+    "lastName": "Brown"
+  }
+    print(catalog.create_company_contact("gid://shopify/Company/3882058038", contact_data))
+    
+    
 
 
 if __name__ == "__main__":
