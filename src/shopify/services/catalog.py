@@ -511,3 +511,68 @@ class CatalogService:
         }
         
         return self.client.execute(query=query, variables=variables)
+    
+    # ----------------------
+    # Redirect
+    # ----------------------   
+    def create_redirect(self, path: str, target: str) -> Dict[str, Any]:
+        query = """
+        mutation UrlRedirectCreate($urlRedirect: UrlRedirectInput!) {
+            urlRedirectCreate(urlRedirect: $urlRedirect) {
+                urlRedirect {
+                id
+                path
+                target
+                }
+                userErrors {
+                field
+                message
+                }
+            }
+        }
+        """
+        
+        variables = {
+        "urlRedirect": {
+            "path": path,
+            "target": target
+        }
+        }
+        
+        return self.client.execute(query=query, variables=variables)
+    
+    def query_redirect(self, first: int = 10, query: Optional[str] = None) -> Dict[str, Any]:
+        filter_query = """
+        query ($first: Int!, $query: String) {
+            urlRedirects(first: $first, query: $query) {
+                edges {
+                    node {
+                        id
+                        path
+                        target
+                    }
+                }
+            }
+        }
+    """
+        variables = {
+            "first": first,
+            "query": query if query else None
+    }
+        data = self.client.execute(query=filter_query, variables=variables)
+        
+        edges = data.get('urlRedirects').get('edges')
+        if not edges:
+            return "No urls found"
+
+        url_dict = {
+            x['node']['id']: 
+            {
+            "id": x['node']['id'],
+            "path": x['node']['path'],
+            "target": x['node']['target']
+            } for x in edges
+        }
+        return url_dict
+        raise NotImplementedError
+        
