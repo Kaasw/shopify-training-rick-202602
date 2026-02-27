@@ -31,11 +31,10 @@ def main() -> None:
     sales = SalesService(client)
 
     # TODO:
-    # - repo.list_entities()
+    print(catalog.delete_product("gid://shopify/Product/8197640585260"))
+    print(sales.delete_order("gid://shopify/DraftOrder/1110019571756"))
     # - For each entity type, call the correct delete mutation
     # - repo.delete_entity_record(gid) after successful deletion
-    raise NotImplementedError
-
 
 if __name__ == "__main__":
     main()
