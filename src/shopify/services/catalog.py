@@ -791,7 +791,7 @@ class CatalogService:
         return self.client.execute(filter_query, variables)
     
     # ----------------------
-    # MetaObjects
+    # Giftcard
     # ----------------------
     def create_gift_card(self, customer_gid: str, initialValue: float, **kwargs) -> Dict[str, Any]:
         query = """
@@ -841,3 +841,146 @@ class CatalogService:
         }
         
         return self.client.execute(query_filter, variables)
+    
+    # ----------------------
+    # Translation
+    # ----------------------
+    
+    def enable_shop_locale(self, locale: str) -> Dict[str, Any]:
+        query = """
+            mutation enableLocale($locale: String!) {
+                shopLocaleEnable(locale: $locale) {
+                    userErrors {
+                    message
+                    field
+                    }
+                    shopLocale {
+                    locale
+                    name
+                    primary
+                    published
+                    }
+                }
+                }
+        
+        """
+        
+        variables = {
+            "locale": locale
+        }
+        
+        return self.client.execute(query, variables)
+        
+        
+    def disable_shop_locale(self, locale: str) -> Dict[str, Any]:
+        query = """
+            mutation disableLocale($locale: String!) {
+            shopLocaleDisable(locale: $locale) {
+                userErrors {
+                message
+                field
+                }
+                locale
+            }
+            }
+        
+        """
+        
+        variables = {
+            "locale": locale
+        }
+        
+        return self.client.execute(query, variables)
+        
+    def get_translatable_resource(self, resourceId: str) -> Dict[str, Any]:
+        query = """
+            query ($resourceId: ID!) {
+                translatableResource(resourceId: $resourceId) {
+                    resourceId
+                    translatableContent {
+                    key
+                    value
+                    digest
+                    locale
+                    
+                    }
+                }
+                }
+        """
+        
+        variables = {
+            "resourceId": resourceId
+        }
+        
+        return self.client.execute(query, variables)
+    
+    def manual_translate(self, resourceId: str, translations: List[dict]) -> Dict[str, Any]:
+        query = """
+            mutation translationsRegister($resourceId: ID!, $translations: [TranslationInput!]!) {
+                translationsRegister(resourceId: $resourceId, translations: $translations) {
+                    userErrors {
+                    message
+                    field
+                    }
+                    translations {
+                    key
+                    value
+                    market {
+                        name
+                    }
+                    }
+                }
+                }
+        """
+        
+        variables = {
+            "resourceId": resourceId,
+            "translations": translations
+        }
+        
+        return self.client.execute(query, variables)
+        
+    def update_shop_locale(self, shop_iso_code:str, shop_locale_input: dict) -> Dict[str, Any]:
+        query = """
+            mutation updateLocale($locale: String!, $shopLocale: ShopLocaleInput!) {
+                shopLocaleUpdate(locale: $locale, shopLocale: $shopLocale) {
+                    userErrors {
+                    message
+                    field
+                    }
+                    shopLocale {
+                    name
+                    locale
+                    primary
+                    published
+                    }
+                }
+                }
+        """
+        
+        variables = {
+            "locale": shop_iso_code,
+            "shopLocale": shop_locale_input
+        }
+        
+        return self.client.execute(query, variables)
+
+    def get_translated_resource(self, resourceId: str, locale: str) -> Dict[str, Any]:
+        query = """
+            query ($resourceId: ID!, $locale: String!) {
+                translatableResource(resourceId: $resourceId) {
+                    resourceId
+                    translations(locale: $locale) {
+                    key
+                    value
+                    }
+                    }
+                }
+        """
+        
+        variables = {
+            "resourceId": resourceId,
+            "locale": locale
+        }
+        
+        return self.client.execute(query, variables)
