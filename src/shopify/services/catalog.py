@@ -704,5 +704,88 @@ class CatalogService:
         
         return self.client.execute(query, variables)
         
+    # ----------------------
+    # MetaObjects
+    # ----------------------
+    def create_metaobject_definition (self, definition: List[dict[Any]], name: str, type: str) -> Dict[str, Any]:
+        query = """
+            mutation CreateMetaobjectDefinition($definition: MetaobjectDefinitionCreateInput!) {
+                metaobjectDefinitionCreate(definition: $definition) {
+                    metaobjectDefinition {
+                    name
+                    type
+                    fieldDefinitions {
+                        name
+                        key
+                    }
+                    }
+                    userErrors {
+                    field
+                    message
+                    code
+                    }
+                }
+                }
+        """
         
+        variables = {
+            "definition" : {
+                "name": name,
+                "type": type,
+                "fieldDefinitions" : 
+                    definition
+            }
+        }
         
+        return self.client.execute(query, variables)
+    
+    def create_metaobject(self,fields: List[dict] ,type: str) -> Dict[str, Any]:
+        query = """
+            mutation CreateMetaobject($metaobject: MetaobjectCreateInput!) {
+                metaobjectCreate(metaobject: $metaobject) {
+                    metaobject {
+                        id
+                        type
+                    }
+                    userErrors {
+                    field
+                    message
+                    code
+                    }
+                }
+                }
+        """
+        
+        variables = {
+            "metaobject" : {
+                "type": type,
+                "fields": fields
+            }
+        }
+        
+        return self.client.execute(query, variables)
+    
+    def query_metaobjects (self, type: str, first: int = 10,query: Optional[str] = None) -> Dict[str, Any]:
+        filter_query = """
+            query Metaobjects($type: String!, $first: Int) {
+                metaobjects(type: $type, first: $first) {
+                    nodes {
+                        handle
+                        displayName
+                        fields {
+                            key
+                            type
+                            value
+                        }
+                    }
+                }
+            }
+        """
+        
+        variables = {
+            "type": type,
+            "first": first,
+            "query": query if query else None
+        }
+        
+        return self.client.execute(filter_query, variables)
