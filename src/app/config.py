@@ -14,6 +14,8 @@ class Settings:
     shop_domain: str
     api_version: str
     access_token: str
+    client_id: str
+    client_secret: str
     training_prefix: str
     sqlite_path: str
 
@@ -22,6 +24,8 @@ def load_settings() -> Settings:
     shop_domain = (os.getenv("SHOPIFY_SHOP_DOMAIN") or "").strip()
     api_version = (os.getenv("SHOPIFY_ADMIN_API_VERSION") or "").strip()
     access_token = (os.getenv("SHOPIFY_ADMIN_ACCESS_TOKEN") or "").strip()
+    client_id = (os.getenv("SHOPIFY_CLIENT_ID") or "").strip()
+    client_secret = (os.getenv("SHOPIFY_CLIENT_SECRET") or "").strip()
     training_prefix = (os.getenv("TRAINING_PREFIX") or "dev-training").strip()
     sqlite_path = (os.getenv("SQLITE_PATH") or "./training.db").strip()
 
@@ -34,6 +38,8 @@ def load_settings() -> Settings:
         shop_domain=shop_domain,
         api_version=api_version,
         access_token=access_token,
+        client_id=client_id,
+        client_secret=client_secret,
         training_prefix=training_prefix,
         sqlite_path=sqlite_path,
     )

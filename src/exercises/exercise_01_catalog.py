@@ -56,10 +56,10 @@ def main() -> None:
         ]},
     ]
     # - Use catalog.create_product_with_variants(...)
-    variant = catalog.create_product_with_variants(title="Skibidi Toilet with variants", productOptions=product_options)
-    
+    variant = catalog.create_product_with_variants(title="Quantity test product 2", productOptions=product_options)
+    print(variant)
     product_gids = [simple_product['productCreate']['product']['id'], variant['productCreate']['product']['id']]
-    print(catalog.add_products_to_collection(collection_gid=custom_data['id'], product_gid=product_gids))
+    # print(catalog.add_products_to_collection(collection_gid=custom_data['id'], product_gid=product_gids))
     # - Register created entity IDs into DB registry (repo.register_entity)
 
     # raise NotImplementedError
