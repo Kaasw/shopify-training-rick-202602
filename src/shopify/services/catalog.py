@@ -984,3 +984,100 @@ class CatalogService:
         }
         
         return self.client.execute(query, variables)
+    
+        
+    # ----------------------
+    # Company
+    # ----------------------
+    def create_company(self, name: str, **kwargs) -> Dict[str, Any]:
+        query = """
+            mutation ($input: CompanyCreateInput!) {
+                companyCreate(input: $input) {
+                    userErrors {
+                        code
+                        field
+                        message
+                    }
+                    
+                    company {
+                        id
+                        locations(first: 5) {
+                            nodes {
+                                id
+                                name
+                            }
+                        }
+                    }
+                    
+                }
+            }
+        """
+        
+        variables = {
+            "input": {
+                "company" : {
+                    "name": name,
+                },
+                **kwargs
+                
+            }
+        }
+        
+        return self.client.execute(query, variables)
+    
+    def create_company_location(self, company_gid: str, location_data: dict) -> Dict[str, Any]:
+        query = """
+            mutation companyLocationCreate($companyId: ID!, $input: CompanyLocationInput!) {
+            companyLocationCreate(companyId: $companyId, input: $input) {
+            companyLocation {
+                id
+                locale
+                name
+            }
+            userErrors {
+                field
+                message
+            }
+            }
+            }
+        """
+        
+        variables = {
+            "companyId": company_gid,
+            "input": location_data
+        }
+        
+        return self.client.execute(query, variables)
+    
+    def create_company_contact(self, company_id: str, contact_data: dict[str]) -> Dict[str, Any]:
+        query = """
+            mutation CompanyContactCreate($companyId: ID!, $input: CompanyContactInput!) {
+                companyContactCreate(companyId: $companyId, input: $input) {
+                    companyContact {
+                    id
+                    company {
+                        id
+                        name
+                    }
+                    customer {
+                        id
+                        firstName
+                        lastName
+                        email
+                    }
+                    }
+                    userErrors {
+                    field
+                    message
+                    code
+                    }
+                }
+                }
+        """
+        
+        variables = {
+            "companyId": company_id,
+            "input": contact_data 
+        }
+        
+        return self.client.execute(query, variables)
