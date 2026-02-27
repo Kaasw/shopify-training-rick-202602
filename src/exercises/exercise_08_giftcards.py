@@ -10,18 +10,27 @@ Goal:
 
 from src.app.config import load_settings
 from src.shopify.client import ShopifyGraphQLClient
+from src.shopify.services.catalog import CatalogService, MetafieldType, ownerType
 from src.storage import repo
 
 
 def main() -> None:
     settings = load_settings()
-    _client = ShopifyGraphQLClient(settings)
+    client = ShopifyGraphQLClient(settings)
+    catalog = CatalogService(client)
 
     # TODO:
     # - Implement gift card creation mutation (if available)
     # - Query gift cards
     # - Save IDs to SQLite registry
-    raise NotImplementedError
+    
+    # print(catalog.create_gift_card("gid://shopify/Customer/9871422750764", 362.00, note="Skibidi to u"))
+    print(catalog.query_gift_card())
+    
+    
+    
+
+
 
 
 if __name__ == "__main__":
