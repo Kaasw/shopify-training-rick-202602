@@ -32,6 +32,56 @@ class Name(Enum):
     SAFETY_STOCK = "safety_stock"
     QUALITY_CONTROL = "quality_control"
     INCOMING = "incoming"
+    
+class MetafieldType(Enum):
+    # Simple Types
+    BOOLEAN = "boolean"
+    COLOR = "color"
+    DATE = "date"
+    DATE_TIME = "date_time"
+    ID = "id"
+    NUMBER_INTEGER = "number_integer"
+    NUMBER_DECIMAL = "number_decimal"
+    SINGLE_LINE_TEXT_FIELD = "single_line_text_field"
+    MULTI_LINE_TEXT_FIELD = "multi_line_text_field"
+    URL = "url"
+    
+    # Complex/JSON Types
+    DIMENSION = "dimension"
+    JSON = "json"
+    LINK = "link"
+    MONEY = "money"
+    RATING = "rating"
+    RICH_TEXT_FIELD = "rich_text_field"
+    VOLUME = "volume"
+    WEIGHT = "weight"
+    
+class ownerType(Enum):
+    API_PERMISSION = "API_PERMISSION"
+    ARTICLE = "ARTICLE"
+    BLOG = "BLOG"
+    CART_TRANSFORM = "CARTTRANSFORM"
+    COLLECTION = "COLLECTION"
+    COMPANY = "COMPANY"
+    COMPANY_LOCATION = "COMPANY_LOCATION"
+    CUSTOMER = "CUSTOMER"
+    DELIVERY_CUSTOMIZATION = "DELIVERY_CUSTOMIZATION"
+    DISCOUNT = "DISCOUNT"
+    DRAFT_ORDER = "DRAFTORDER"
+    FULFILLMENT_CONSTRAINT_RULE = "FULFILLMENT_CONSTRAINT_RULE"
+    GIFT_CARD_TRANSACTION = "GIFT_CARD_TRANSACTION"
+    LOCATION = "LOCATION"
+    MARKET = "MARKET"
+    ORDER = "ORDER"
+    ORDER_ROUTING_LOCATION_RULE = "ORDER_ROUTING_LOCATION_RULE"
+    PAGE = "PAGE"
+    PAYMENT_CUSTOMIZATION = "PAYMENT_CUSTOMIZATION"
+    PRODUCT = "PRODUCT"
+    PRODUCT_VARIANT = "PRODUCTVARIANT"
+    SELLING_PLAN = "SELLING_PLAN"
+    SHOP = "SHOP"
+    VALIDATION = "VALIDATION"
+    
 
 class CatalogService:
     """
@@ -575,4 +625,84 @@ class CatalogService:
         }
         return url_dict
         raise NotImplementedError
+        
+    # ----------------------
+    # Metafields
+    # ----------------------  
+    def set_metafields(self, metafields: List[dict]) -> Dict[str, Any]:
+        query = """
+        mutation MetafieldsSet($metafields: [MetafieldsSetInput!]!) {
+            metafieldsSet(metafields: $metafields) {
+                metafields {
+                key
+                namespace
+                value
+                id
+                }
+                userErrors {
+                field
+                message
+                code
+                }
+            }
+        }
+        """
+        
+        variables = {
+            "metafields": metafields
+        }
+        
+        return self.client.execute(query=query, variables=variables)
+        
+    def create_metafield_definition(self, definition: dict[str]) -> Dict[str, Any]:
+        query = """
+            mutation CreateMetafieldDefinition($definition: MetafieldDefinitionInput!) {
+                metafieldDefinitionCreate(definition: $definition) {
+                    createdDefinition {
+                    id
+                    name
+                    }
+                    userErrors {
+                    field
+                    message
+                    code
+                    }
+                }
+            }
+        """
+        
+        variables = {
+            "definition": definition
+        }
+        
+        return self.client.execute(query, variables)
+    
+    def query_metafield_definitions(self, ownerType: ownerType, first: int = 10,  query: Optional[str] = None) -> Dict[str, Any]:
+        query = """
+            query MetafieldDefinitions($ownerType: MetafieldOwnerType!, $first: Int) {
+                metafieldDefinitions(ownerType: $ownerType, first: $first) {
+                    nodes {
+                    id
+                    metafields (first: 10) {
+                        nodes {
+                            jsonValue
+                        }
+                    }
+                    key
+                    type {
+                        name
+                    }
+                    }
+                }
+                }
+        """
+        
+        variables = {
+            "ownerType": ownerType.value,
+            "first": first
+        }
+        
+        return self.client.execute(query, variables)
+        
+        
         
