@@ -177,6 +177,31 @@ class CatalogService:
 
         return self.client.execute(query=query, variables=variables)
         raise NotImplementedError
+    
+    def update_product(self, product_gid, **update_data) -> Dict[str,Any]:
+        query = """
+            mutation ($product: ProductUpdateInput!) {
+                productUpdate(product: $product) {
+                    product {
+                        id
+                    }
+                    
+                    userErrors {
+                        field
+                        message
+                    }
+                }
+            }
+        """
+        
+        variables = {
+            "product" : {
+                "id": product_gid,
+                **update_data
+            }
+        }
+        
+        return self.client.execute(query=query, variables=variables)
 
     # ----------------------
     # Collections
